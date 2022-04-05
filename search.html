@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search</title>
+    <link rel="stylesheet" href="stylesheet.css">
+</head>
+<body>
+<div class="wrapper">
+
+    <nav class="text-left ">
+        <a class="ml-auto" href="index.html">Cloud Images</a>
+
+        <ul class="ml-auto nav-ul">
+            <li class="nav-ul">
+                <a href="index.html">Home</a>
+            </li>
+            <li class="nav-ul">
+                <a href="upload-image.html">Upload</a>
+            </li>
+            <li class="nav-ul">
+                <a href="search.html">Search</a>
+            </li>
+        </ul>
+        <!--            <ul class="mr-auto">-->
+        <!--                <li>first</li>-->
+        <!--                <li>second</li>-->
+        <!--                <li>third</li>-->
+        <!--            </ul>-->
+
+
+    </nav>
+    <main class="text-snow">
+        <h3>Search Form</h3>
+        <form action="#">
+            <div>
+                <input type="text" class="form-element" name="image-name" placeholder="Search for images" id="image-name" required>
+            </div>
+            <br>
+            <div class="text-center">
+                <label for="types-ul">Image type:</label>
+                <ul id="types-ul">
+                    <li class="d-inline">
+                        <input type="checkbox" id="types-png" name="types[]" value="png" checked>
+                        <label for="types-png">PNG</label>
+                    </li>
+                    <li class="d-inline">
+                        <input type="checkbox" id="types-svg" name="types[]" value="svg" checked>
+                        <label for="types-svg">SVG</label>
+                    </li>
+                    <li class="d-inline">
+                        <input type="checkbox" id="types-jpg" name="types[]" value="jpg" checked>
+                        <label for="types-jpg">JPG</label>
+                    </li>
+                    <li class="d-inline">
+                        <input type="checkbox" id="types-jpeg" name="types[]" value="jpeg" checked>
+                        <label for="types-jpeg">JPEG</label>
+                    </li>
+                </ul>
+
+            </div>
+            <br>
+            <div>
+                <button type="submit" class="btn bg-primary text-snow">Search</button>
+            </div>
+        </form>
+    </main>
+    <footer>
+
+    </footer>
+</div>
+
+</body>
+</html>

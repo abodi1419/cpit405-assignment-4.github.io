@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=0.7">
+    <link rel="stylesheet" href="stylesheet.css"/>
+    <style>
+
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+
+        <nav class="text-left ">
+            <a class="ml-auto" href="index.html">Cloud Images</a>
+
+            <ul class="ml-auto nav-ul">
+                <li class="nav-ul">
+                    <a href="index.html">Home</a>
+                </li>
+                <li class="nav-ul">
+                    <a href="upload-image.html">Upload</a>
+                </li>
+                <li class="nav-ul">
+                    <a href="search.html">Search</a>
+                </li>
+            </ul>
+            <!--            <ul class="mr-auto">-->
+            <!--                <li>first</li>-->
+            <!--                <li>second</li>-->
+            <!--                <li>third</li>-->
+            <!--            </ul>-->
+
+
+        </nav>
+        <main class="text-snow">
+            <div class="row">
+                <div class="column-50">
+                    <h3 class="text-left m0">Your Images</h3>
+                </div>
+                <div class="column-50 ">
+                    <label for="up-date" >Sort by date: </label>
+                    <select id="up-date" onchange="sortChanged(this)" class="normal-btn bg-snow p-2 text-dark">
+                        <option value="des">Des</option>
+                        <option value="asc">Asc</option>
+                    </select>
+                </div>
+            </div>
+
+
+
+
+
+            <hr>
+            <div class="row custom-column" id="images-row">
+
+
+            </div>
+
+                </tbody>
+            </table>
+        </main>
+        <footer>
+            
+        </footer>
+    </div>
+    <script>
+        let images = [];
+        window.onload = function () {
+            if (document.cookie != undefined && document.cookie.indexOf('sort') != -1) {
+                let select = document.getElementById('up-date')
+                select.value = document.cookie.split('=')[1];
+                sortChanged(select)
+            }
+        }
+        class MyImage{
+            constructor(src,alt,id,uploadDate) {
+                this.src = src;
+                this.alt= alt;
+                this.id=id;
+                this.uploadDate = uploadDate
+            }
+        }
+        function sortChanged(e) {
+            let imagesDates = document.getElementsByClassName('upload-date');
+            images = [];
+            Array.from(imagesDates).forEach(makeImages)
+            sort(e.value)
+            if (document.cookie != undefined && document.cookie.indexOf('sort') != -1) {
+                if(e.value!=document.cookie.split('=')[1]) {
+                    let expirationDate = new Date();
+                    expirationDate.setTime(expirationDate.getTime() + 180 * 24 * 60 * 60 * 1000);
+                    let expires = "; expires=" + expirationDate.toUTCString();
+                    document.cookie = "sort=" + e.value + expires;
+                }
+            }
+            writeImages()
+
+        }
+        function makeImages(item) {
+            var image = document.getElementById('img'+item.id);
+            images.push(new MyImage(image.src,image.alt,item.id,item.innerHTML))
+        }
+        function sort(type) {
+            if(type == 'des'){
+                images.sort(function (item1,item2) {
+                    return new Date(item1.uploadDate) - new Date(item2.uploadDate);
+                })
+            }else{
+                images.sort(function (item1,item2) {
+                    return new Date(item2.uploadDate) - new Date(item1.uploadDate);
+                })
+            }
+        }
+        function writeImages() {
+            let imagesRow = document.getElementById('images-row');
+            imagesRow.innerHTML="";
+            images.forEach(function (image) {
+                imagesRow.innerHTML += " <div class=\"column\" >" +
+                    "                    <img id=\"img"+image.id+"\" src=\""+image.src+"\" alt=\""+image.alt+"\">" +
+                    "                    <span id=\""+image.id+"\" class=\"upload-date\">"+image.uploadDate+"</span>" +
+                    "                </div>"
+            })
+
+
+        }
+
+        let xhr = new XMLHttpRequest();
+        xhr.open('get', 'http://api.giphy.com/v1/gifs/search?q=motorcycle&api_key=pv61WXUd2P870H9biGwqmCIgWMRUewnL');
+        xhr.send();
+        xhr.onload = function() {
+            if(this.readyState===4 && this.status===200) {
+                let res = JSON.parse(xhr.response);
+                res.data.forEach(function (v, i) {
+                    images.push(new MyImage(v.images.downsized_medium.url, v.title, v.id, v.trending_datetime))
+                })
+                writeImages()
+            }
+        };
+
+    </script>
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+<form method="post">
+    <label for="item-name">Item</label>
+    <input type="text" id="item-name" name="title" placeholder="Enter Item name">
+    <br>
+    <label for="item-price">Price</label>
+    <input type="number" id="item-price" name="price" min="0" step="0.01" placeholder="Enter Item price">
+    <br>
+    <input type="submit" value="Add" />
+</form>
+<table>
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Item</th>
+        <th>Price</th>
+        <th>Control</th>
+    </tr>
+    </thead>
+    <tbody id="my-list">
+    </tbody>
+    <tfoot>
+    <tr>
+        <th colspan="2">Total</th>
+        <th colspan="2"><span>0</span> SAR</th>
+    </tr>
+    </tfoot>
+</table>
+
+<script>
+    var list, my_form;
+
+    window.onload = function() {
+        list = document.getElementById('my-list');
+        my_form = document.querySelector('form');
+
+        my_form.onsubmit = handleAdd;
+    }
+
+    function handleAdd(x) {
+        x.preventDefault();
+        let num = document.createElement('td');
+        let item = document.createElement('td');
+        let price = document.createElement('td');
+        let controls = document.createElement('td');
+        let editBTN = document.createElement('button');
+        let delBTN = document.createElement('button');
+        let row = document.createElement('tr');
+
+        num.innerHTML = list.children.length + 1;
+        item.innerHTML = my_form.elements['title'].value
+        price.innerHTML = my_form.elements['price'].value
+
+        controls.append(editBTN);
+        controls.append(document.createTextNode(" "));
+        controls.append(delBTN);
+
+        row.append(num);
+        row.append(item);
+        row.append(price);
+        row.append(controls);
+
+        list.append(row);
+
+        editBTN.innerHTML = "Edit";
+        delBTN.innerHTML = "Del";
+
+        delBTN.onclick = function(y) {
+            if (confirm("Are you sure want delete " + item.innerHTML + "?")) {
+                list.removeChild(row);
+                updateTotal();
+            }
+        }
+        editBTN.onclick = function(e){
+            let name = row.cells[1]
+            let price = row.cells[2]
+            if(this.innerText == 'Edit'){
+
+                let oldName = name.innerText
+                let oldPrice = price.innerText
+                let nameInput = document.createElement('input');
+                nameInput.type = 'text'
+                nameInput.value = oldName;
+                nameInput.id='edit-name'+row.cells[0].innerText
+                let priceInput = document.createElement('input');
+                priceInput.type = 'number'
+                priceInput.value = oldPrice;
+                priceInput.id='edit-price'+row.cells[0].innerText
+                name.innerHTML = ''
+                name.appendChild(nameInput);
+                price.innerHTML = '';
+                price.appendChild(priceInput);
+                this.innerText = 'Confirm'
+            }else {
+                let newName = document.getElementById('edit-name'+row.cells[0].innerText);
+                let newPrice = document.getElementById('edit-price'+row.cells[0].innerText)
+                name.innerHTML = newName.value;
+                price.innerHTML = newPrice.value
+                this.innerText = 'Edit';
+                updateTotal()
+            }
+
+
+        }
+
+        updateTotal();
+
+        my_form.reset();
+    }
+
+    function updateTotal() {
+        let total_span = document.querySelector('table > tfoot > tr > th > span');
+
+        let total = 0;
+        for (let i = 0; i < list.children.length; ++i) {
+            list.children[i].querySelector("td:nth-child(1)").innerHTML = i + 1;
+            let v = list.children[i].querySelector("td:nth-child(3)").innerHTML;
+
+            if(v.indexOf('input')> -1)
+            {
+                v = list.children[i].querySelector("td:nth-child(3)").children[0].value;
+            }
+            total += v * 1;
+        }
+        total_span.innerHTML = total;
+    }
+
+
+</script>
+</body>
+</html>
